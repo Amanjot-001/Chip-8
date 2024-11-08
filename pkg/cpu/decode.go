@@ -5,7 +5,7 @@ import "log"
 func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	first := opcode & 0xF000
 	second := opcode & 0x0F00
-	third := opcode & 0x00F0
+	// third := opcode & 0x00F0
 	fourth := opcode & 0x000F
 	last3 := opcode & 0x0FFF
 	last2 := opcode & 0x00FF

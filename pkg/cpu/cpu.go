@@ -2,7 +2,6 @@ package cpu
 
 import (
 	"chip-8/pkg/memory"
-	"log"
 )
 
 type CPU struct {
@@ -13,15 +12,15 @@ type CPU struct {
 	Stack     []uint16       // stack
 }
 
-func NewCPU(gamePath string) *CPU {
+func NewCPU(gamePath string) (*CPU, error) {
 	cpu := &CPU{
 		Memory: memory.NewMemory(),
 		PC:     0x200, // Programs start at 0x200
 		Stack:  make([]uint16, 16),
 	}
 	cpu.Reset()
-	cpu.LoadGame(gamePath)
-	return cpu
+	err := cpu.LoadGame(gamePath)
+	return cpu, err
 }
 
 func (cpu *CPU) Reset() {
@@ -35,11 +34,9 @@ func (cpu *CPU) Reset() {
 	cpu.Memory.Clear()             // mem clear
 }
 
-func (cpu *CPU) LoadGame(gamePath string) {
+func (cpu *CPU) LoadGame(gamePath string) error {
 	err := cpu.Memory.LoadGame(gamePath, 0x200)
-	if err != nil {
-		log.Fatalf("Failed to load game: %v", err)
-	}
+	return err
 }
 
 // 2 bytes opcode but 1 byte mem size
