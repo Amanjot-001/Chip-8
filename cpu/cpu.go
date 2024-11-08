@@ -38,12 +38,12 @@ func Reset(cpu *CPU, gamePath string) {
 
 // 2 bytes opcode but 1 byte mem size
 // combining PC and PC+1 to get opcode (big-endian)
-func GetNextOpcode(cpu *CPU) uint16 {
+func (cpu *CPU) GetNextOpcode() uint16 {
 	var res uint16 = 0
-	res = uint16(cpu.Memory[cpu.PC]) // first byte
-	res <<= 8 // left shift 8
+	res = uint16(cpu.Memory[cpu.PC])    // first byte
+	res <<= 8                           // left shift 8
 	res |= uint16(cpu.Memory[cpu.PC+1]) // second byte
-	cpu.PC += 2 // increment PC
+	cpu.PC += 2                         // increment PC
 
 	return res
 }
