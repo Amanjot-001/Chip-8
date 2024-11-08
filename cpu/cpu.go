@@ -24,14 +24,26 @@ func Reset(cpu *CPU, gamePath string) {
 	}
 	cpu.Stack = make([]uint16, 16) // reinit stack with 0
 
-	gameData, err := os.ReadFile(gamePath)
+	gameData, err := os.ReadFile(gamePath) // game read
 	if err != nil {
 		log.Fatalf("Failed to load game: %v", err)
 	}
 
-	if len(gameData) > len(cpu.Memory)-0x200 {
+	if len(gameData) > len(cpu.Memory)-0x200 { // not fit in memory
 		log.Fatalf("Game too large to fit in memory.")
 	}
 
 	copy(cpu.Memory[0x200:], gameData)
+}
+
+// 2 bytes opcode but 1 byte mem size
+// combining PC and PC+1 to get opcode (big-endian)
+func GetNextOpcode(cpu *CPU) uint16 {
+	var res uint16 = 0
+	res = uint16(cpu.Memory[cpu.PC]) // first byte
+	res <<= 8 // left shift 8
+	res |= uint16(cpu.Memory[cpu.PC+1]) // second byte
+	cpu.PC += 2 // increment PC
+
+	return res
 }
