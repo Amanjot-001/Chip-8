@@ -22,6 +22,9 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		}
 	case 0x1000:
 		cpu.PC = last3
+	case 0x2000:
+		cpu.PushToStack(cpu.PC)
+		cpu.PC = last3
 	case 0x6000:
 		register := (second) >> 8
 		value := uint8(last2)
