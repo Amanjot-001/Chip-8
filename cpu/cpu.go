@@ -1,5 +1,10 @@
 package cpu
 
+import (
+	"log"
+	"os"
+)
+
 type CPU struct {
 	Memory    [4096]uint8 // 4096 bytes of memory
 	Registers [16]uint8   // 16 8-bit registers
@@ -18,4 +23,15 @@ func Reset(cpu *CPU) {
 		cpu.Memory[i] = 0
 	}
 	cpu.Stack = make([]uint16, 16) // reinit stack with 0
+
+	gameData, err := os.ReadFile("")
+	if err != nil {
+		log.FatalF("Failed to load game: %v", err)
+	}
+
+	if len(gameData) > len(cpu.Memory)-0x200 {
+		log.Fatalf("Game too large to fit in memory.")
+	}
+
+	copy(cpu.Memory[ox200:], gameData)
 }
