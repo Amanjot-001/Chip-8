@@ -2,6 +2,7 @@ package cpu
 
 import (
 	"chip-8/pkg/memory"
+	"log"
 )
 
 type CPU struct {
@@ -9,14 +10,14 @@ type CPU struct {
 	Registers [16]uint8      // 16 8-bit registers
 	I         uint16         // addr register
 	PC        uint16         // program counter
-	Stack     []uint16       // stack
+	Stack     [16]uint16     // chip8 hax max 16 levels depth for stack
+	SP        uint8          // stack pointer
 }
 
 func NewCPU(gamePath string) (*CPU, error) {
 	cpu := &CPU{
 		Memory: memory.NewMemory(),
 		PC:     0x200, // Programs start at 0x200
-		Stack:  make([]uint16, 16),
 	}
 	cpu.Reset()
 	err := cpu.LoadGame(gamePath)
@@ -30,8 +31,7 @@ func (cpu *CPU) Reset() {
 		cpu.Registers[i] = 0
 	}
 
-	cpu.Stack = make([]uint16, 16) // reinit stack with 0
-	cpu.Memory.Clear()             // mem clear
+	cpu.Memory.Clear() // mem clear
 }
 
 func (cpu *CPU) LoadGame(gamePath string) error {
@@ -49,4 +49,22 @@ func (cpu *CPU) GetNextOpcode() uint16 {
 	cpu.PC += 2                                // increment PC
 
 	return res
+}
+
+func (cpu *CPU) PushToStack(value uint16) {
+	if cpu.SP >= 16 {
+		log.Fatalf("Stack Overflow")
+	}
+
+	cpu.Stack[cpu.SP] = value
+	cpu.SP++
+}
+
+func (cpu *CPU) PopFromStack() uint16 {
+	if cpu.SP < 0 {
+		log.Fatalf("Stack Underflow")
+	}
+
+	cpu.SP--
+	return cpu.Stack[cpu.SP]
 }
