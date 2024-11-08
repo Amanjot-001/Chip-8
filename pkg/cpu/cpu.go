@@ -1,19 +1,20 @@
 package cpu
 
 import (
+	"chip-8/pkg/memory"
 	"log"
 	"os"
 )
 
 type CPU struct {
-	Memory    [4096]uint8 // 4096 bytes of memory
-	Registers [16]uint8   // 16 8-bit registers
-	I         uint16      // addr register
-	PC        uint16      // program counter
-	Stack     []uint16    // stack
+	Memory    *memory.Memory // 4096 bytes of memory
+	Registers [16]uint8      // 16 8-bit registers
+	I         uint16         // addr register
+	PC        uint16         // program counter
+	Stack     []uint16       // stack
 }
 
-func Reset(cpu *CPU, gamePath string) {
+func(cpu *CPU) Reset(gamePath string) {
 	cpu.I = 0                      // addr register to 0
 	cpu.PC = 0x200                 // starting addr of all games
 	for i := range cpu.Registers { // initialize all registers to 0
@@ -46,32 +47,4 @@ func (cpu *CPU) GetNextOpcode() uint16 {
 	cpu.PC += 2                         // increment PC
 
 	return res
-}
-
-func (cpu *CPU) DecodeAndExecute(opcode uint16) {
-	first := opcode & 0xF000
-	second := opcode & 0x0F00
-	third := opcode & 0x00F0
-	fourth := opcode & 0x000F
-	last3 := opcode & 0x0FFF
-	last2 := opcode & 0x00FF
-
-	switch first {
-	case 0x0000:
-
-	case 0x1000:
-		cpu.PC = last3
-	case 0x6000:
-		register := (second) >> 8
-		value := uint8(last2)
-		cpu.Registers[register] = value
-	case 0x7000:
-		register := (second) >> 8
-		addVal := uint8(last2)
-		cpu.Registers[register] += addVal
-	case 0xA000:
-		cpu.I = last3
-	default:
-		log.Printf("Unknown opcode: 0x%X\n", opcode)
-	}
 }
