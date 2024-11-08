@@ -13,7 +13,7 @@ type CPU struct {
 	Stack     []uint16    // stack
 }
 
-func Reset(cpu *CPU) {
+func Reset(cpu *CPU, gamePath string) {
 	cpu.I = 0                      // addr register to 0
 	cpu.PC = 0x200                 // starting addr of all games
 	for i := range cpu.Registers { // initialize all registers to 0
@@ -24,14 +24,14 @@ func Reset(cpu *CPU) {
 	}
 	cpu.Stack = make([]uint16, 16) // reinit stack with 0
 
-	gameData, err := os.ReadFile("")
+	gameData, err := os.ReadFile(gamePath)
 	if err != nil {
-		log.FatalF("Failed to load game: %v", err)
+		log.Fatalf("Failed to load game: %v", err)
 	}
 
 	if len(gameData) > len(cpu.Memory)-0x200 {
 		log.Fatalf("Game too large to fit in memory.")
 	}
 
-	copy(cpu.Memory[ox200:], gameData)
+	copy(cpu.Memory[0x200:], gameData)
 }
