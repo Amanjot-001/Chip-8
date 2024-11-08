@@ -69,6 +69,8 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		register := (second) >> 8
 		addVal := uint8(last2)
 		cpu.Registers[register] += addVal
+	case 0xA000:
+		cpu.I = last3
 	default:
 		log.Printf("Unknown opcode: 0x%X\n", opcode)
 	}
