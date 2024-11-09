@@ -44,6 +44,13 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		cpu.Registers[register] += addVal
 	case 0x8000:
 		switch fourth {
+		case 0x0001:
+			regX := second
+			regX >>= 8
+			regY := third
+			regY >>= 4
+
+			cpu.Registers[regX] |= cpu.Registers[regY]
 		case 0x0002:
 			regX := second
 			regX >>= 8
