@@ -100,6 +100,12 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 				cpu.Registers[0xF] = 0
 			}
 			cpu.Registers[regX] -= yval
+		case 0x0006: // according to original chip8 (wikipedia)
+			regX := second
+			regX >>= 8
+
+			cpu.Registers[0xF] = cpu.Registers[regX] & 0x000F
+			cpu.Registers[regX] >>= 1
 		}
 	case 0xA000:
 		cpu.I = last3
