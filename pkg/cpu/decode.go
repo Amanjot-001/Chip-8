@@ -5,7 +5,7 @@ import "log"
 func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	first := opcode & 0xF000
 	second := opcode & 0x0F00
-	// third := opcode & 0x00F0
+	third := opcode & 0x00F0
 	fourth := opcode & 0x000F
 	last3 := opcode & 0x0FFF
 	last2 := opcode & 0x00FF
@@ -25,6 +25,15 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	case 0x2000:
 		cpu.PushToStack(cpu.PC)
 		cpu.PC = last3
+	case 0x5000:
+		regX := second
+		regX >>= 8
+		regY := third
+		regY >>= 4
+
+		if cpu.Registers[regX] == cpu.Registers[regY] {
+			cpu.PC += 2 // skip next instruction
+		}
 	case 0x6000:
 		register := (second) >> 8
 		value := uint8(last2)
