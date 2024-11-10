@@ -1,17 +1,19 @@
 package cpu
 
 import (
+	"chip-8/pkg/display"
 	"chip-8/pkg/memory"
 	"log"
 )
 
 type CPU struct {
-	Memory    *memory.Memory // 4096 bytes of memory
-	Registers [16]uint8      // 16 8-bit registers
-	I         uint16         // addr register
-	PC        uint16         // program counter
-	Stack     [16]uint16     // chip8 hax max 16 levels depth for stack
-	SP        uint8          // stack pointer
+	Memory    *memory.Memory   // 4096 bytes of memory
+	Registers [16]uint8        // 16 8-bit registers
+	I         uint16           // addr register
+	PC        uint16           // program counter
+	Stack     [16]uint16       // chip8 hax max 16 levels depth for stack
+	SP        uint8            // stack pointer
+	Display   *display.Display // 64x32 display
 }
 
 func NewCPU(gamePath string) (*CPU, error) {

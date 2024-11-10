@@ -129,6 +129,26 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		}
 	case 0xA000:
 		cpu.I = last3
+	case 0xD000:
+		regX := second
+		regX >>= 8
+		regY := third
+		regY >>= 4
+		height := fourth
+
+		xval := cpu.Registers[regX]
+		yval := cpu.Registers[regY]
+
+		cpu.Registers[0xF] = 0
+
+		var sprite []uint8
+		for row := 0; row < int(height); row++ {
+			sprite = append(sprite, uint8(cpu.I+uint16(row)))
+		}
+
+		if cpu.Display.DrawSprite(xval, yval, sprite) {
+			cpu.Registers[0xF] = 1
+		}
 	default:
 		log.Printf("Unknown opcode: 0x%X\n", opcode)
 	}
