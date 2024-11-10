@@ -13,10 +13,9 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	switch first {
 	case 0x0000:
 		switch fourth {
-		case 0x000E:
-
 		case 0x0000:
-
+			cpu.Display.Clear()
+		case 0x000E:
 		default:
 			log.Printf("Unknown opcode: 0x%X\n", opcode)
 		}
