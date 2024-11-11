@@ -2,6 +2,7 @@ package cpu
 
 import (
 	"log"
+	"math/rand"
 )
 
 // 2 bytes opcode but 1 byte mem size
@@ -162,6 +163,10 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		cpu.I = last3
 	case 0xB000:
 		cpu.PC = uint16(cpu.Registers[0x00]) + last3
+	case 0xC000:
+		regX := second
+		randomNumber := rand.Intn(256)
+		cpu.Registers[regX] = uint8(randomNumber) & uint8(last2)
 	case 0xD000:
 		regX := second
 		regX >>= 8
