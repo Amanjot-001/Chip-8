@@ -26,13 +26,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 	switch first {
 	case 0x0000:
-		switch fourth {
-		case 0x0000:
+		switch last3 {
+		case 0x00E0:
 			cpu.Display.Clear()
-		case 0x000E:
+		case 0x00EE:
 			cpu.PC = cpu.PopFromStack()
-		default:
-			log.Printf("Unknown opcode: 0x%X\n", opcode)
 		}
 	case 0x1000:
 		cpu.PC = last3
