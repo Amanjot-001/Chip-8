@@ -30,6 +30,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		case 0x0000:
 			cpu.Display.Clear()
 		case 0x000E:
+			cpu.PC = cpu.PopFromStack()
 		default:
 			log.Printf("Unknown opcode: 0x%X\n", opcode)
 		}

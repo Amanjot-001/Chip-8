@@ -2,10 +2,6 @@ package main
 
 import (
 	"chip-8/pkg/cpu"
-	"chip-8/pkg/utils"
-	"fmt"
-
-	// "fmt"
 	"log"
 )
 
@@ -35,13 +31,9 @@ func main() {
 
 	// chip8.Memory.Extract()
 
-	for i := 0; i < len(utils.Fontset); i++ {
-		fmt.Printf("0x%04X\n", chip8.Memory.Read(uint16(i + 0x0050)))
+	for i := 0; i < 20; i++ {
+		opcode := chip8.GetNextOpcode()
+		chip8.DecodeAndExecute(opcode)
 	}
-
-	// for i := 0; i < 20; i++ {
-	// 	opcode := chip8.GetNextOpcode()
-	// 	chip8.DecodeAndExecute(opcode)
-	// }
-	// chip8.Display.Render()
+	chip8.Display.Render()
 }
