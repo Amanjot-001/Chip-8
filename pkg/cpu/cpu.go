@@ -2,6 +2,7 @@ package cpu
 
 import (
 	"chip-8/pkg/display"
+	"chip-8/pkg/input"
 	"chip-8/pkg/memory"
 	"log"
 )
@@ -14,6 +15,7 @@ type CPU struct {
 	Stack     [16]uint16       // chip8 hax max 16 levels depth for stack
 	SP        uint8            // stack pointer
 	Display   *display.Display // 64x32 display
+	keys      *input.Input     // 16 keys
 }
 
 func NewCPU(gamePath string) (*CPU, error) {
@@ -21,6 +23,7 @@ func NewCPU(gamePath string) (*CPU, error) {
 		Memory:  memory.NewMemory(),
 		PC:      0x200, // Programs start at 0x200
 		Display: display.NewDisplay(),
+		keys:    input.NewInput(),
 	}
 	cpu.Reset()
 	cpu.Memory.LoadFontset()

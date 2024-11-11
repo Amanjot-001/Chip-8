@@ -187,6 +187,8 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		if cpu.Display.DrawSprite(xval, yval, sprite) {
 			cpu.Registers[0xF] = 1
 		}
+	case 0xE000:
+		
 	default:
 		log.Fatalf("Unknown opcode: 0x%X\n", opcode)
 	}
