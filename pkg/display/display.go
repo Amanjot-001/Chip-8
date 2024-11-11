@@ -1,5 +1,7 @@
 package display
 
+import "fmt"
+
 const (
 	Width  = 64
 	Height = 32
@@ -42,4 +44,16 @@ func (d *Display) DrawSprite(x, y uint8, sprite []uint8) bool {
 	}
 
 	return collision
+}
+
+func (d *Display) Render() {
+	for y := 0; y < Height; y++ {
+		for x := 0; x < Width; x++ {
+			if d.Pixels[y][x] == 1 {
+				fmt.Print("#") // Represents "on" pixel
+			} else {
+				fmt.Print(" ") // Represents "off" pixel
+			}
+		}
+	}
 }
