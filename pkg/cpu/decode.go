@@ -39,6 +39,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	case 0x2000:
 		cpu.PushToStack(cpu.PC)
 		cpu.PC = last3
+	case 0x3000:
+		regX := second
+		if cpu.Registers[regX] == uint8(last2) {
+			cpu.PC += 2
+		}
 	case 0x5000:
 		regX := second
 		regX >>= 8
