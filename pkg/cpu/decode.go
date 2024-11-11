@@ -151,6 +151,15 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			cpu.Registers[0xF] = cpu.Registers[regX] & 0xF0
 			cpu.Registers[regX] <<= 1
 		}
+	case 0x9000:
+		regX := second
+		regX >>= 8
+		regY := third
+		regY >>= 4
+
+		if cpu.Registers[regX] != cpu.Registers[regY] {
+			cpu.PC += 2 // skip next instruction
+		}
 	case 0xA000:
 		cpu.I = last3
 	case 0xD000:
