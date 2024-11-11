@@ -160,6 +160,8 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		}
 	case 0xA000:
 		cpu.I = last3
+	case 0xB000:
+		cpu.PC = uint16(cpu.Registers[0x00]) + last3
 	case 0xD000:
 		regX := second
 		regX >>= 8
