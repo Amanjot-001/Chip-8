@@ -44,6 +44,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		if cpu.Registers[regX] == uint8(last2) {
 			cpu.PC += 2
 		}
+	case 0x4000:
+		regX := second
+		if cpu.Registers[regX] != uint8(last2) {
+			cpu.PC += 2
+		}
 	case 0x5000:
 		regX := second
 		regX >>= 8
