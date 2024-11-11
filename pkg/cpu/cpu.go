@@ -18,11 +18,12 @@ type CPU struct {
 
 func NewCPU(gamePath string) (*CPU, error) {
 	cpu := &CPU{
-		Memory: memory.NewMemory(),
-		PC:     0x200, // Programs start at 0x200
+		Memory:  memory.NewMemory(),
+		PC:      0x200, // Programs start at 0x200
 		Display: display.NewDisplay(),
 	}
 	cpu.Reset()
+	cpu.Memory.LoadFontset()
 	err := cpu.LoadGame(gamePath)
 	return cpu, err
 }
@@ -34,7 +35,7 @@ func (cpu *CPU) Reset() {
 		cpu.Registers[i] = 0
 	}
 
-	cpu.Memory.Clear() // mem clear
+	cpu.Memory.Clear()  // mem clear
 	cpu.Display.Clear() // clear display
 }
 

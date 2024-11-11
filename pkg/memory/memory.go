@@ -11,7 +11,6 @@ type Memory struct {
 
 func NewMemory() *Memory {
 	m := &Memory{}
-	m.LoadFontset()
 	return m
 }
 
