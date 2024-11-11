@@ -40,6 +40,7 @@ func (cpu *CPU) Reset() {
 
 	cpu.Memory.Clear()  // mem clear
 	cpu.Display.Clear() // clear display
+	cpu.keys.Clear()    // clear input
 }
 
 func (cpu *CPU) LoadGame(gamePath string) error {
