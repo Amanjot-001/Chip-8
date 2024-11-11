@@ -1,6 +1,20 @@
 package cpu
 
-import "log"
+import (
+	"log"
+)
+
+// 2 bytes opcode but 1 byte mem size
+// combining PC and PC+1 to get opcode (big-endian)
+func (cpu *CPU) GetNextOpcode() uint16 {
+	var res uint16 = 0
+	res = uint16(cpu.Memory.Read(cpu.PC))      // first byte
+	res <<= 8                                  // left shift 8
+	res |= uint16(cpu.Memory.Read(cpu.PC + 1)) // second byte
+	cpu.PC += 2                                // increment PC
+
+	return res
+}
 
 func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 	first := opcode & 0xF000
@@ -149,6 +163,6 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			cpu.Registers[0xF] = 1
 		}
 	default:
-		log.Printf("Unknown opcode: 0x%X\n", opcode)
+		log.Fatalf("Unknown opcode: 0x%X\n", opcode)
 	}
 }

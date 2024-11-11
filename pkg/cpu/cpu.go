@@ -20,6 +20,7 @@ func NewCPU(gamePath string) (*CPU, error) {
 	cpu := &CPU{
 		Memory: memory.NewMemory(),
 		PC:     0x200, // Programs start at 0x200
+		Display: display.NewDisplay(),
 	}
 	cpu.Reset()
 	err := cpu.LoadGame(gamePath)
@@ -34,23 +35,12 @@ func (cpu *CPU) Reset() {
 	}
 
 	cpu.Memory.Clear() // mem clear
+	cpu.Display.Clear() // clear display
 }
 
 func (cpu *CPU) LoadGame(gamePath string) error {
 	err := cpu.Memory.LoadGame(gamePath, 0x200)
 	return err
-}
-
-// 2 bytes opcode but 1 byte mem size
-// combining PC and PC+1 to get opcode (big-endian)
-func (cpu *CPU) GetNextOpcode() uint16 {
-	var res uint16 = 0
-	res = uint16(cpu.Memory.Read(cpu.PC))      // first byte
-	res <<= 8                                  // left shift 8
-	res |= uint16(cpu.Memory.Read(cpu.PC + 1)) // second byte
-	cpu.PC += 2                                // increment PC
-
-	return res
 }
 
 func (cpu *CPU) PushToStack(value uint16) {

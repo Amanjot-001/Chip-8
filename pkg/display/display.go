@@ -12,7 +12,9 @@ type Display struct {
 }
 
 func NewDisplay() *Display {
-	return &Display{}
+	d := &Display{}
+	d.Clear()
+	return d
 }
 
 func (d *Display) Clear() {
@@ -55,5 +57,6 @@ func (d *Display) Render() {
 				fmt.Print(" ") // Represents "off" pixel
 			}
 		}
+		fmt.Println("")
 	}
 }
