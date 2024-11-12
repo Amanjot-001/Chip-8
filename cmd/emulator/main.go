@@ -3,6 +3,8 @@ package main
 import (
 	"chip-8/pkg/cpu"
 	"log"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 func main() {
@@ -30,6 +32,8 @@ func main() {
 	// }
 
 	// chip8.Memory.Extract()
+
+	sdl.Init(sdl.INIT_EVERYTHING)
 
 	for i := 0; i < 20; i++ {
 		opcode := chip8.GetNextOpcode()
