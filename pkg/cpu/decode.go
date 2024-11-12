@@ -188,7 +188,19 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			cpu.Registers[0xF] = 1
 		}
 	case 0xE000:
-		
+
+	case 0xF000:
+		switch last2 {
+		case 0x0055:
+			regX := second
+			regX >>= 8
+
+			for i := 0; i <= int(regX); i++ {
+				cpu.Memory.Write(cpu.I+uint16(i), cpu.Registers[i])
+			}
+
+			cpu.I += regX + 1
+		}
 	default:
 		log.Fatalf("Unknown opcode: 0x%X\n", opcode)
 	}
