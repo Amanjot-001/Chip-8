@@ -40,11 +40,13 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		cpu.PC = last3
 	case 0x3000:
 		regX := second
+		regX >>= 8
 		if cpu.Registers[regX] == uint8(last2) {
 			cpu.PC += 2
 		}
 	case 0x4000:
 		regX := second
+		regX >>= 8
 		if cpu.Registers[regX] != uint8(last2) {
 			cpu.PC += 2
 		}
@@ -165,6 +167,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		cpu.PC = uint16(cpu.Registers[0x00]) + last3
 	case 0xC000:
 		regX := second
+		regX >>= 8
 		randomNumber := rand.Intn(256)
 		cpu.Registers[regX] = uint8(randomNumber) & uint8(last2)
 	case 0xD000:
@@ -199,7 +202,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 				cpu.Memory.Write(cpu.I+uint16(i), cpu.Registers[i])
 			}
 
-			cpu.I += regX + 1
+			cpu.I += regX + 1 // but wiki says not to change
 		case 0x0065:
 			regX := second
 			regX >>= 8
@@ -208,7 +211,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 				cpu.Registers[uint8(regX)+uint8(i)] = cpu.Memory.Read(cpu.I + uint16(i))
 			}
 
-			cpu.I += regX + 1
+			cpu.I += regX + 1 // but wiki says not to change
 		}
 	default:
 		log.Fatalf("Unknown opcode: 0x%X\n", opcode)
