@@ -30,6 +30,14 @@ func (in *Input) SetKey(key uint8, pressed uint8) {
 	}
 }
 
+func (in *Input) IsKeyPressed(key uint8) bool {
+	if key < 16 {
+		return in.keys[key] == 1
+	}
+
+	return false
+}
+
 func (in *Input) HandleKeyPress(event sdl.Event) {
 	switch t := event.(type) {
 	case *sdl.KeyboardEvent:
