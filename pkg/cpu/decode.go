@@ -191,7 +191,16 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			cpu.Registers[0xF] = 1
 		}
 	case 0xE000:
+		switch last2 {
+		case 0x009E:
+			regX := second
+			regX >>= 8
+			key := cpu.Registers[regX]
 
+			if cpu.keys.IsKeyPressed(key) {
+				cpu.PC += 2
+			}
+		}
 	case 0xF000:
 		switch last2 {
 		case 0x0055:
