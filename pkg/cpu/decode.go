@@ -211,6 +211,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		}
 	case 0xF000:
 		switch last2 {
+		case 0x001E:
+			regX := second
+			regX >>= 8
+
+			cpu.I += uint16(cpu.Registers[regX])
 		case 0x0055:
 			regX := second
 			regX >>= 8
