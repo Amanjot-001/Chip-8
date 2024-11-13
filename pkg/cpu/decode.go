@@ -216,6 +216,15 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX >>= 8
 
 			cpu.I += uint16(cpu.Registers[regX])
+		case 0x0029:
+			regX := second
+			regX >>= 8
+
+			// register is 8 bits and can store 2 chars
+			// so we use char in last nibble
+			character := cpu.Registers[regX] &0x0F
+			
+			cpu.I = uint16(0x50 + character)
 		case 0x0055:
 			regX := second
 			regX >>= 8
