@@ -222,9 +222,22 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 			// register is 8 bits and can store 2 chars
 			// so we use char in last nibble
-			character := cpu.Registers[regX] &0x0F
-			
+			character := cpu.Registers[regX] & 0x0F
+
 			cpu.I = uint16(0x50 + character)
+		case 0x0033: // Binary-coded
+			regX := second
+			regX >>= 8
+
+			value := cpu.Registers[regX]
+
+			hundreds := value / 100
+			tens := (value / 10) % 10
+			units := value % 10
+
+			cpu.Memory.Write(cpu.I, hundreds)
+			cpu.Memory.Write(cpu.I+1, tens)
+			cpu.Memory.Write(cpu.I+2, units)
 		case 0x0055:
 			regX := second
 			regX >>= 8
