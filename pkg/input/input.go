@@ -12,7 +12,7 @@ func NewInput() *Input {
 }
 
 func (in *Input) Clear() {
-	for i := 0x0; i < 0xF; i++ {
+	for i := 0x0; i <= 0xF; i++ {
 		in.keys[i] = 0
 	}
 }
