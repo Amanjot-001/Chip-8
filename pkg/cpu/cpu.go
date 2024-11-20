@@ -8,14 +8,16 @@ import (
 )
 
 type CPU struct {
-	Memory    *memory.Memory   // 4096 bytes of memory
-	Registers [16]uint8        // 16 8-bit registers
-	I         uint16           // addr register
-	PC        uint16           // program counter
-	Stack     [16]uint16       // chip8 hax max 16 levels depth for stack
-	SP        uint8            // stack pointer
-	Display   *display.Display // 64x32 display
-	keys      *input.Input     // 16 keys
+	Memory     *memory.Memory   // 4096 bytes of memory
+	Registers  [16]uint8        // 16 8-bit registers
+	I          uint16           // addr register
+	PC         uint16           // program counter
+	Stack      [16]uint16       // chip8 hax max 16 levels depth for stack
+	SP         uint8            // stack pointer
+	Display    *display.Display // 64x32 display
+	Keys       *input.Input     // 16 keys
+	DelayTimer uint8
+	SoundTimer uint8
 }
 
 func NewCPU(gamePath string) (*CPU, error) {
@@ -23,7 +25,9 @@ func NewCPU(gamePath string) (*CPU, error) {
 		Memory:  memory.NewMemory(),
 		PC:      0x200, // Programs start at 0x200
 		Display: display.NewDisplay(),
-		keys:    input.NewInput(),
+		Keys:    input.NewInput(),
+		DelayTimer: 0,
+		SoundTimer: 0,
 	}
 	cpu.Reset()
 	cpu.Memory.LoadFontset()
@@ -40,7 +44,7 @@ func (cpu *CPU) Reset() {
 
 	cpu.Memory.Clear()  // mem clear
 	cpu.Display.Clear() // clear display
-	cpu.keys.Clear()    // clear input
+	cpu.Keys.Clear()    // clear input
 }
 
 func (cpu *CPU) LoadGame(gamePath string) error {

@@ -197,7 +197,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX >>= 8
 			key := cpu.Registers[regX]
 
-			if cpu.keys.IsKeyPressed(key) {
+			if cpu.Keys.IsKeyPressed(key) {
 				cpu.PC += 2
 			}
 		case 0x00A1:
@@ -205,7 +205,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX >>= 8
 			key := cpu.Registers[regX]
 
-			if !cpu.keys.IsKeyPressed(key) {
+			if !cpu.Keys.IsKeyPressed(key) {
 				cpu.PC += 2
 			}
 		}
