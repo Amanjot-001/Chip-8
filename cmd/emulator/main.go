@@ -2,7 +2,9 @@ package main
 
 import (
 	"chip-8/pkg/cpu"
+	"chip-8/pkg/debugger"
 	"log"
+
 	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -28,6 +30,11 @@ func main() {
 	numFrame := numOfOpcodes / fps
 
 	quit := false
+	stepMode := false
+
+	debugger := debugger.NewDebugger(chip8)
+	// debugger.PrintMemory(chip8.PC, chip8.PC+34)
+
 	for !quit {
 		startTime := time.Now()
 
@@ -37,19 +44,28 @@ func main() {
 				quit = true
 			case *sdl.KeyboardEvent:
 				chip8.Keys.HandleKeyPress(e)
+				log.Printf("hi")
 			}
 		}
 
 		for i := 0; i < numFrame; i++ {
+			if stepMode {
+				debugger.WaitForKeyPress(&quit)
+			}
+
 			opcode := chip8.GetNextOpcode()
+			log.Printf("Executing Opcode: 0x%X\n", opcode)
 			chip8.DecodeAndExecute(opcode)
+
+			if chip8.DrawFlag {
+				chip8.Display.Render()
+				chip8.DrawFlag = false // Reset after rendering
+			}
+
+			debugger.PrintState()
 		}
 
 		chip8.DecreaseTimers()
-		if chip8.DrawFlag {
-			chip8.Display.Render()
-			chip8.DrawFlag = false // Reset after rendering
-		}
 
 		elapsed := time.Since(startTime)
 		if elapsed < interval {
