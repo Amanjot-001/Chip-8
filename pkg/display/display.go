@@ -7,7 +7,7 @@ import (
 const (
 	Width       = 64
 	Height      = 32
-	ScaleFactor = 10
+	ScaleFactor = 20
 )
 
 type Display struct {
@@ -44,8 +44,9 @@ func (d *Display) Clear() {
 	}
 }
 
-func (d *Display) DrawSprite(x, y uint8, sprite []uint8) bool {
+func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	collision := false
+	updated := false
 	for row := 0; row < len(sprite); row++ {
 		spriteRow := sprite[row]
 		for col := 0; col < 8; col++ {
@@ -59,12 +60,15 @@ func (d *Display) DrawSprite(x, y uint8, sprite []uint8) bool {
 				collision = true
 			}
 
-			// pixel toggle
-			d.Pixels[pixelY][pixelX] ^= pixelState
+			if pixelState == 1 {
+				// pixel toggle
+				d.Pixels[pixelY][pixelX] ^= pixelState
+				updated = true
+			}
 		}
 	}
 
-	return collision
+	return collision, updated
 }
 
 // func (d *Display) Render() {

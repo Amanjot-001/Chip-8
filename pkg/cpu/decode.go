@@ -187,9 +187,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			sprite = append(sprite, uint8(cpu.I+uint16(row)))
 		}
 
-		if cpu.Display.DrawSprite(xval, yval, sprite) {
+		collision, updated := cpu.Display.DrawSprite(xval, yval, sprite)
+		if collision {
 			cpu.Registers[0xF] = 1
 		}
+		cpu.DrawFlag = updated
 	case 0xE000:
 		switch last2 {
 		case 0x009E:
@@ -217,7 +219,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 			cpu.Registers[regX] = cpu.DelayTimer
 		case 0x000A:
-			
+
 		case 0x0015:
 			regX := second
 			regX >>= 8

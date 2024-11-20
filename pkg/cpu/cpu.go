@@ -19,6 +19,7 @@ type CPU struct {
 	Keys       *input.Input     // 16 keys
 	DelayTimer uint8
 	SoundTimer uint8
+	DrawFlag   bool
 }
 
 func NewCPU(gamePath string) (*CPU, error) {
