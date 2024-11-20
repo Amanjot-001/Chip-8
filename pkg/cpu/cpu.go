@@ -22,10 +22,10 @@ type CPU struct {
 
 func NewCPU(gamePath string) (*CPU, error) {
 	cpu := &CPU{
-		Memory:  memory.NewMemory(),
-		PC:      0x200, // Programs start at 0x200
-		Display: display.NewDisplay(),
-		Keys:    input.NewInput(),
+		Memory:     memory.NewMemory(),
+		PC:         0x200, // Programs start at 0x200
+		Display:    display.NewDisplay(),
+		Keys:       input.NewInput(),
 		DelayTimer: 0,
 		SoundTimer: 0,
 	}
@@ -68,4 +68,16 @@ func (cpu *CPU) PopFromStack() uint16 {
 
 	cpu.SP--
 	return cpu.Stack[cpu.SP]
+}
+
+func (cpu *CPU) DecreaseTimers() {
+	if cpu.DelayTimer > 0 {
+		cpu.DelayTimer--
+	}
+
+	if cpu.SoundTimer > 0 {
+		cpu.SoundTimer--
+		// Optional: Add sound handling logic here if your emulator supports sound
+		// Example: Beep or play sound if the sound timer reaches zero
+	}
 }
