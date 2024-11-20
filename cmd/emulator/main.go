@@ -2,7 +2,9 @@ package main
 
 import (
 	"chip-8/pkg/cpu"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -15,29 +17,43 @@ func main() {
 		log.Fatalf("Failed to initialize CPU: %v\n", err)
 	}
 
-	// // Basic tests to confirm the initial state
-	// fmt.Printf("Program Counter: 0x%X\n", chip8.PC) // Should print: Program Counter: 0x200
-	// fmt.Printf("Index Register: 0x%X\n", chip8.I)   // Should print: Index Register: 0x0
-	// fmt.Println("Registers:", chip8.Registers)      // Should print all zeros
-	// fmt.Println("Stack:", chip8.Stack)              // Should print 16 zeros
-
-	// // Basic test for memory loading (assuming game data exists)
-	// for i := 0; i < 10; i++ { // Print first 10 bytes after 0x200
-	// 	fmt.Printf("Memory[0x%X]: 0x%X\n", 0x200+i, chip8.Memory.Read(uint16(0x200+i)))
-	// }
-
-	// for i := 0x200; i < 4096; i++{
-	// 	a := chip8.Memory.Read(uint16(i))
-	// 	fmt.Print(a, " ")
-	// }
-
-	// chip8.Memory.Extract()
-
-	sdl.Init(sdl.INIT_EVERYTHING)
-
-	for i := 0; i < 20; i++ {
-		opcode := chip8.GetNextOpcode()
-		chip8.DecodeAndExecute(opcode)
+	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+		log.Fatalf("Failed to initialize SDL: %v\n", err)
 	}
-	chip8.Display.Render()
+	defer sdl.Quit()
+
+	// Main emulator loop
+	fps := 60
+	interval := time.Second / time.Duration(fps)
+	fmt.Println(interval)
+	numOfOpcodes := 600
+	numFrame := numOfOpcodes / fps
+	fmt.Println(numFrame)
+	
+	quit := false
+	for !quit {
+		startTime := time.Now()
+
+		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+			switch e := event.(type) {
+			case *sdl.QuitEvent:
+				quit = true
+			case *sdl.KeyboardEvent:
+				chip8.Keys.HandleKeyPress(e)
+			}
+		}
+
+		for i := 0; i < numFrame; i++ {
+			opcode := chip8.GetNextOpcode()
+			chip8.DecodeAndExecute(opcode)
+		}
+
+		chip8.DecreaseTimers()
+		chip8.Display.Render()
+
+		elapsed := time.Since(startTime)
+		if elapsed < interval {
+			sdl.Delay(uint32(interval - elapsed))
+		}
+	}
 }

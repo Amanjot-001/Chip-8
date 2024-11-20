@@ -4,6 +4,7 @@ import (
 	"chip-8/pkg/display"
 	"chip-8/pkg/input"
 	"chip-8/pkg/memory"
+	"fmt"
 	"log"
 )
 
@@ -21,18 +22,24 @@ type CPU struct {
 }
 
 func NewCPU(gamePath string) (*CPU, error) {
+	display, err := display.NewDisplay()
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize display: %w", err)
+	}
+
 	cpu := &CPU{
 		Memory:     memory.NewMemory(),
 		PC:         0x200, // Programs start at 0x200
-		Display:    display.NewDisplay(),
+		Display:    display,
 		Keys:       input.NewInput(),
 		DelayTimer: 0,
 		SoundTimer: 0,
 	}
+
 	cpu.Reset()
 	cpu.Memory.LoadFontset()
-	err := cpu.LoadGame(gamePath)
-	return cpu, err
+	err2 := cpu.LoadGame(gamePath)
+	return cpu, err2
 }
 
 func (cpu *CPU) Reset() {
