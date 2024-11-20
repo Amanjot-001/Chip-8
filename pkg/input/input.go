@@ -3,7 +3,7 @@ package input
 import "github.com/veandco/go-sdl2/sdl"
 
 type Input struct {
-	keys [16]uint8 // 0x0 - 0xF
+	Keys [16]uint8 // 0x0 - 0xF
 }
 
 func NewInput() *Input {
@@ -13,7 +13,7 @@ func NewInput() *Input {
 
 func (in *Input) Clear() {
 	for i := 0x0; i <= 0xF; i++ {
-		in.keys[i] = 0
+		in.Keys[i] = 0
 	}
 }
 
@@ -26,13 +26,13 @@ var KeyMap = map[sdl.Keycode]uint8{
 
 func (in *Input) SetKey(key uint8, pressed uint8) {
 	if key < 16 {
-		in.keys[key] = pressed
+		in.Keys[key] = pressed
 	}
 }
 
 func (in *Input) IsKeyPressed(key uint8) bool {
 	if key < 16 {
-		return in.keys[key] == 1
+		return in.Keys[key] == 1
 	}
 
 	return false
