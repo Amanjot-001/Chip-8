@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	gamePath := "./games/IBM-Logo.ch8"
+	gamePath := "./games/pong.rom"
 
 	chip8, err := cpu.NewCPU(gamePath)
 	if err != nil {
@@ -54,7 +54,6 @@ func main() {
 			}
 
 			opcode := chip8.GetNextOpcode()
-			log.Printf("Executing Opcode: 0x%X\n", opcode)
 			chip8.DecodeAndExecute(opcode)
 
 			if chip8.DrawFlag {
@@ -62,7 +61,10 @@ func main() {
 				chip8.DrawFlag = false // Reset after rendering
 			}
 
-			debugger.PrintState()
+			if stepMode {
+				log.Printf("Executing Opcode: 0x%X\n", opcode)
+				debugger.PrintState()
+			}
 		}
 
 		chip8.DecreaseTimers()

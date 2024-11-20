@@ -1,8 +1,11 @@
 package cpu
 
 import (
+	"chip-8/pkg/input"
 	"log"
 	"math/rand"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 // 2 bytes opcode but 1 byte mem size
@@ -219,7 +222,26 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 			cpu.Registers[regX] = cpu.DelayTimer
 		case 0x000A:
+			regX := second
+			regX >>= 8
+			keyPressed := false
 
+			for !keyPressed {
+				event := sdl.WaitEvent()
+				switch e := event.(type) {
+				case *sdl.QuitEvent:
+					// quit := true
+					return
+				case *sdl.KeyboardEvent:
+					if e.State == sdl.PRESSED {
+						key := input.KeyMap[e.Keysym.Sym]
+						if key != 0 {
+							cpu.Registers[regX] = uint8(key)
+							keyPressed = true
+						}
+					}
+				}
+			}
 		case 0x0015:
 			regX := second
 			regX >>= 8
