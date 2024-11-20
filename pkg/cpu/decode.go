@@ -184,7 +184,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 		var sprite []uint8
 		for row := 0; row < int(height); row++ {
-			sprite = append(sprite, uint8(cpu.I+uint16(row)))
+			sprite = append(sprite, cpu.Memory.Read(cpu.I+uint16(row)))
 		}
 
 		collision, updated := cpu.Display.DrawSprite(xval, yval, sprite)
