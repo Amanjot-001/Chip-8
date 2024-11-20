@@ -216,6 +216,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX >>= 8
 
 			cpu.Registers[regX] = cpu.DelayTimer
+		case 0x0015:
+			regX := second
+			regX >>= 8
+
+			cpu.DelayTimer = cpu.Registers[regX]
 		case 0x001E:
 			regX := second
 			regX >>= 8
