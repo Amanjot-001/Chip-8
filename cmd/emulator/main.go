@@ -2,7 +2,6 @@ package main
 
 import (
 	"chip-8/pkg/cpu"
-	"fmt"
 	"log"
 	"time"
 
@@ -25,11 +24,9 @@ func main() {
 	// Main emulator loop
 	fps := 60
 	interval := time.Second / time.Duration(fps)
-	fmt.Println(interval)
 	numOfOpcodes := 600
 	numFrame := numOfOpcodes / fps
-	fmt.Println(numFrame)
-	
+
 	quit := false
 	for !quit {
 		startTime := time.Now()
@@ -49,11 +46,16 @@ func main() {
 		}
 
 		chip8.DecreaseTimers()
-		chip8.Display.Render()
+		if chip8.DrawFlag {
+			chip8.Display.Render()
+			chip8.DrawFlag = false // Reset after rendering
+		}
 
 		elapsed := time.Since(startTime)
 		if elapsed < interval {
 			sdl.Delay(uint32(interval - elapsed))
 		}
+
+		log.Printf("Frame elapsed: %v, Target interval: %v\n", elapsed, interval)
 	}
 }
