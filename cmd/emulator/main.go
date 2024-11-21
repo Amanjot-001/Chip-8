@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	gamePath := "./games/pong.rom"
+	gamePath := "./games/Delay Timer Test [Matthew Mikolay, 2010].ch8"
 
 	chip8, err := cpu.NewCPU(gamePath)
 	if err != nil {
@@ -23,7 +23,11 @@ func main() {
 	}
 	defer sdl.Quit()
 
-	// Main emulator loop
+	// _________________ debugger init _________________
+	debugger := debugger.NewDebugger(chip8)
+	// debugger.PrintMemory(chip8.PC, chip8.PC+34)
+
+	// _________________ Main emulator loop _________________
 	fps := 60
 	interval := time.Second / time.Duration(fps)
 	numOfOpcodes := 600
@@ -32,9 +36,6 @@ func main() {
 	quit := false
 	stepMode := false
 
-	debugger := debugger.NewDebugger(chip8)
-	// debugger.PrintMemory(chip8.PC, chip8.PC+34)
-
 	for !quit {
 		startTime := time.Now()
 
@@ -42,9 +43,10 @@ func main() {
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				quit = true
+				log.Printf("quit")
 			case *sdl.KeyboardEvent:
 				chip8.Keys.HandleKeyPress(e)
-				log.Printf("hi")
+				log.Printf("keypress")
 			}
 		}
 
