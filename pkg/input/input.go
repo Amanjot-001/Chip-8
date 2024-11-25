@@ -1,6 +1,10 @@
 package input
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"log"
+
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Input struct {
 	Keys [16]uint8 // 0x0 - 0xF
@@ -44,9 +48,13 @@ func (in *Input) HandleKeyPress(event sdl.Event) {
 		key, ok := KeyMap[t.Keysym.Sym] // val, bool
 		if ok {
 			if t.State == sdl.PRESSED {
+				log.Printf("Key pressed: %v -> %v\n", t.Keysym.Sym, key)
 				in.SetKey(key, 1)
 			} else if t.State == sdl.RELEASED {
+				log.Printf("Key released: %v -> %v\n", t.Keysym.Sym, key)
 				in.SetKey(key, 0)
+			} else {
+				log.Printf("Unhandled key: %v\n", t.Keysym.Sym)
 			}
 		}
 	}
