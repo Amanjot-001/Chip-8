@@ -49,6 +49,9 @@ func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	updated := false
 	for row := 0; row < len(sprite); row++ {
 		spriteRow := sprite[row]
+		if spriteRow == 0 { // No pixels to draw in this row
+			continue
+		}
 		for col := 0; col < 8; col++ {
 			pixelX := (x + uint8(col)) % Width
 			pixelY := (y + uint8(row)) % Height
