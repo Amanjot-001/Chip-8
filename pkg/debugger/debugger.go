@@ -27,7 +27,7 @@ func (d *Debugger) PrintState() {
 		}
 	}
 	fmt.Printf("\nDelayTimer: %d  SoundTimer: %d\n", d.CPU.DelayTimer, d.CPU.SoundTimer)
-	d.PrintKeyStates()
+	// d.PrintKeyStates()
 	fmt.Println("\nStack:")
 	for i := 0; i < int(d.CPU.SP); i++ {
 		fmt.Printf("0x%04X ", d.CPU.Stack[i])
