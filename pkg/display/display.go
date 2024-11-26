@@ -99,18 +99,15 @@ func (d *Display) Render() {
 		for x := 0; x < Width; x++ {
 			if d.Pixels[y][x] == 1 {
 				d.renderer.SetDrawColor(255, 255, 255, 255) // White color for "on" pixel
-			} else {
-				d.renderer.SetDrawColor(0, 0, 0, 255) // Black color for "off" pixel
+				// Draw a rectangle representing a pixel
+				rect := sdl.Rect{
+					X: int32(x * ScaleFactor),
+					Y: int32(y * ScaleFactor),
+					W: ScaleFactor,
+					H: ScaleFactor,
+				}
+				d.renderer.FillRect(&rect)
 			}
-
-			// Draw a rectangle representing a pixel
-			rect := sdl.Rect{
-				X: int32(x * ScaleFactor),
-				Y: int32(y * ScaleFactor),
-				W: ScaleFactor,
-				H: ScaleFactor,
-			}
-			d.renderer.FillRect(&rect)
 		}
 	}
 
