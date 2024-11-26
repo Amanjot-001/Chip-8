@@ -44,6 +44,9 @@ func main() {
 	quit := false
 	stepMode := false
 
+	// for certain number of cycles to run
+	// counter := 0
+
 	for !quit {
 		startTime := time.Now()
 		log.Println("start time", startTime)
@@ -59,7 +62,14 @@ func main() {
 			}
 		}
 
+		executionLoopStart := time.Now()
+		// if counter >= 0 {
 		for i := 0; i < numFrame; i++ {
+			// if counter > 20 {
+			// 	break
+			// }
+			// counter++
+			instStart := time.Now()
 			if stepMode {
 				debugger.WaitForKeyPress(&quit)
 			}
@@ -71,18 +81,23 @@ func main() {
 				chip8.Display.Render()
 				chip8.DrawFlag = false // Reset after rendering
 			}
+			log.Printf("Executing Opcode: 0x%X\n", opcode)
 
 			if stepMode {
 				log.Printf("Executing Opcode: 0x%X\n", opcode)
-				debugger.PrintState()
+				// debugger.PrintState()
 			}
+
+			log.Println("instruction since", time.Since(instStart))
 		}
+		// }
+		log.Println("loop since", time.Since(executionLoopStart))
 
 		chip8.DecreaseTimers()
 
 		elapsed := time.Since(startTime)
 		log.Println("elapsed since", elapsed)
-		
+
 		if elapsed < interval {
 			delaystarttime := time.Now()
 			log.Println("delaystarttime", delaystarttime)
