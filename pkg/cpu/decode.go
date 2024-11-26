@@ -298,7 +298,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 				cpu.Memory.Write(cpu.I+uint16(i), cpu.Registers[i])
 			}
 
-			// cpu.I += regX + 1 // only for old games
+			cpu.I += regX + 1 // only for old games
 		case 0x0065:
 			regX := second
 			regX >>= 8
@@ -307,7 +307,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 				cpu.Registers[uint8(i)] = cpu.Memory.Read(cpu.I + uint16(i))
 			}
 
-			// cpu.I += regX + 1 // only for old games
+			cpu.I += regX + 1 // only for old games
 		}
 	default:
 		log.Fatalf("Unknown opcode: 0x%X\n", opcode)
