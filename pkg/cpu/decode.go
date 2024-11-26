@@ -134,7 +134,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regY := third
 			regY >>= 4
 
-			lsb := cpu.Registers[regY] & 0x01
+			lsb := cpu.Registers[regY] & 0x0001
 			cpu.Registers[regX] = (cpu.Registers[regY] >> 1)
 			cpu.Registers[0xF] = lsb
 		case 0x0007:
@@ -154,9 +154,12 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		case 0x000E: // according to original chip8 (wikipedia)
 			regX := second
 			regX >>= 8
+			regY := third
+			regY >>= 4
 
-			cpu.Registers[0xF] = cpu.Registers[regX] & 0xF0
-			cpu.Registers[regX] <<= 1
+			msb := cpu.Registers[regY] & 0b1000
+			cpu.Registers[regX] = (cpu.Registers[regY] << 1)
+			cpu.Registers[0xF] = msb
 		}
 	case 0x9000:
 		regX := second
