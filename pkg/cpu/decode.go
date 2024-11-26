@@ -101,7 +101,6 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 			cpu.Registers[regX] ^= cpu.Registers[regY]
 		case 0x0004:
-			cpu.Registers[0xF] = 0
 			regX := second
 			regX >>= 8
 			regY := third
@@ -110,10 +109,11 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			xval := cpu.Registers[regX]
 			yval := cpu.Registers[regY]
 
+			cpu.Registers[regX] = (xval + yval) & 0xFF
+			cpu.Registers[0xF] = 0x00
 			if uint16(xval+yval) > 255 {
-				cpu.Registers[0xF] = 1
+				cpu.Registers[0xF] = 0x01
 			}
-			cpu.Registers[regX] += yval
 		case 0x0005:
 			cpu.Registers[0xF] = 1
 			regX := second
