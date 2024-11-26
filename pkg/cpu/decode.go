@@ -185,9 +185,9 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 		cpu.Registers[0xF] = 0
 
-		var sprite []uint8
+		sprite := make([]uint8, height)
 		for row := 0; row < int(height); row++ {
-			sprite = append(sprite, cpu.Memory.Read(cpu.I+uint16(row)))
+			sprite[row] = cpu.Memory.Read(cpu.I + uint16(row))
 		}
 
 		collision, updated := cpu.Display.DrawSprite(xval, yval, sprite)
@@ -293,7 +293,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX >>= 8
 
 			for i := 0; i <= int(regX); i++ {
-				cpu.Registers[uint8(regX)+uint8(i)] = cpu.Memory.Read(cpu.I + uint16(i))
+				cpu.Registers[uint8(i)] = cpu.Memory.Read(cpu.I + uint16(i))
 			}
 
 			// cpu.I += regX + 1 // only for old games
