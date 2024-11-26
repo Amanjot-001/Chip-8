@@ -85,28 +85,34 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regY := third
 			regY >>= 4
 
-			cpu.Registers[regX] |= cpu.Registers[regY]
+			or := cpu.Registers[regX] | cpu.Registers[regY]
+			cpu.Registers[regX] = or
+			cpu.Registers[0xF] = 0
 		case 0x0002:
 			regX := second
 			regX >>= 8
 			regY := third
 			regY >>= 4
 
-			cpu.Registers[regX] &= cpu.Registers[regY]
+			and := cpu.Registers[regX] & cpu.Registers[regY]
+			cpu.Registers[regX] = and
+			cpu.Registers[0xF] = 0
 		case 0x0003:
 			regX := second
 			regX >>= 8
 			regY := third
 			regY >>= 4
 
-			cpu.Registers[regX] ^= cpu.Registers[regY]
+			xor := cpu.Registers[regX] ^ cpu.Registers[regY]
+			cpu.Registers[regX] = xor
+			cpu.Registers[0xF] = 0
 		case 0x0004:
 			regX := second
 			regX >>= 8
 			regY := third
 			regY >>= 4
 
-			add :=  uint16(cpu.Registers[regX]) + uint16(cpu.Registers[regY])
+			add := uint16(cpu.Registers[regX]) + uint16(cpu.Registers[regY])
 			cpu.Registers[regX] = uint8(add & 0xFF)
 			if add > 0xFF {
 				cpu.Registers[0xF] = 1
