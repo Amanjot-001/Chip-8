@@ -1,8 +1,6 @@
 package display
 
 import (
-	"log"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -49,10 +47,10 @@ func (d *Display) Clear() {
 func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	collision := false
 	updated := false
-	log.Println("len of sprite", len(sprite))
+	// log.Println("len of sprite", len(sprite))
 	for row := 0; row < len(sprite); row++ {
 		spriteRow := sprite[row]
-		log.Printf("sprite row %b\n", spriteRow)
+		// log.Printf("sprite row %b\n", spriteRow)
 		if spriteRow == 0 { // No pixels to draw in this row
 			continue
 		}
@@ -99,18 +97,15 @@ func (d *Display) Render() {
 		for x := 0; x < Width; x++ {
 			if d.Pixels[y][x] == 1 {
 				d.renderer.SetDrawColor(255, 255, 255, 255) // White color for "on" pixel
-			} else {
-				d.renderer.SetDrawColor(0, 0, 0, 255) // Black color for "off" pixel
+				// Draw a rectangle representing a pixel
+				rect := sdl.Rect{
+					X: int32(x * ScaleFactor),
+					Y: int32(y * ScaleFactor),
+					W: ScaleFactor,
+					H: ScaleFactor,
+				}
+				d.renderer.FillRect(&rect)
 			}
-
-			// Draw a rectangle representing a pixel
-			rect := sdl.Rect{
-				X: int32(x * ScaleFactor),
-				Y: int32(y * ScaleFactor),
-				W: ScaleFactor,
-				H: ScaleFactor,
-			}
-			d.renderer.FillRect(&rect)
 		}
 	}
 

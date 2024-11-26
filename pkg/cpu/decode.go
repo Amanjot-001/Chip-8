@@ -101,21 +101,19 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 
 			cpu.Registers[regX] ^= cpu.Registers[regY]
 		case 0x0004:
-			cpu.Registers[0xF] = 0
 			regX := second
 			regX >>= 8
 			regY := third
 			regY >>= 4
 
-			xval := cpu.Registers[regX]
-			yval := cpu.Registers[regY]
-
-			if uint16(xval+yval) > 255 {
+			add :=  uint16(cpu.Registers[regX]) + uint16(cpu.Registers[regY])
+			cpu.Registers[regX] = uint8(add & 0xFF)
+			if add > 0xFF {
 				cpu.Registers[0xF] = 1
+			} else {
+				cpu.Registers[0xF] = 0
 			}
-			cpu.Registers[regX] += yval
 		case 0x0005:
-			cpu.Registers[0xF] = 1
 			regX := second
 			regX >>= 8
 			regY := third
@@ -124,18 +122,21 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			xval := cpu.Registers[regX]
 			yval := cpu.Registers[regY]
 
+			cpu.Registers[regX] -= yval
+			cpu.Registers[0xF] = 1
 			if yval > xval {
 				cpu.Registers[0xF] = 0
 			}
-			cpu.Registers[regX] -= yval
-		case 0x0006: // according to original chip8 (wikipedia)
+		case 0x0006:
 			regX := second
 			regX >>= 8
+			regY := third
+			regY >>= 4
 
-			cpu.Registers[0xF] = cpu.Registers[regX] & 0x0F
-			cpu.Registers[regX] >>= 1
+			lsb := cpu.Registers[regY] & 0x0001
+			cpu.Registers[regX] = (cpu.Registers[regY] >> 1)
+			cpu.Registers[0xF] = lsb
 		case 0x0007:
-			cpu.Registers[0xF] = 1
 			regX := second
 			regX >>= 8
 			regY := third
@@ -144,16 +145,20 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			xval := cpu.Registers[regX]
 			yval := cpu.Registers[regY]
 
+			cpu.Registers[regX] = yval - xval
+			cpu.Registers[0xF] = 1
 			if xval > yval {
 				cpu.Registers[0xF] = 0
 			}
-			cpu.Registers[regX] = yval - xval
-		case 0x000E: // according to original chip8 (wikipedia)
+		case 0x000E:
 			regX := second
 			regX >>= 8
+			regY := third
+			regY >>= 4
 
-			cpu.Registers[0xF] = cpu.Registers[regX] & 0xF0
-			cpu.Registers[regX] <<= 1
+			msb := (cpu.Registers[regY] & 0b10000000) >> 7
+			cpu.Registers[regX] = (cpu.Registers[regY] << 1)
+			cpu.Registers[0xF] = msb
 		}
 	case 0x9000:
 		regX := second
