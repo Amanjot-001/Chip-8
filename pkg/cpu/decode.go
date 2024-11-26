@@ -106,13 +106,12 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regY := third
 			regY >>= 4
 
-			xval := cpu.Registers[regX]
-			yval := cpu.Registers[regY]
-
-			cpu.Registers[regX] = (xval + yval) & 0xFF
-			cpu.Registers[0xF] = 0x00
-			if uint16(xval+yval) > 255 {
-				cpu.Registers[0xF] = 0x01
+			add :=  uint16(cpu.Registers[regX]) + uint16(cpu.Registers[regY])
+			cpu.Registers[regX] = uint8(add & 0xFF)
+			if add > 0xFF {
+				cpu.Registers[0xF] = 1
+			} else {
+				cpu.Registers[0xF] = 0
 			}
 		case 0x0005:
 			regX := second
@@ -128,7 +127,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			if yval > xval {
 				cpu.Registers[0xF] = 0
 			}
-		case 0x0006: // according to original chip8 (wikipedia)
+		case 0x0006:
 			regX := second
 			regX >>= 8
 			regY := third
@@ -151,13 +150,13 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			if xval > yval {
 				cpu.Registers[0xF] = 0
 			}
-		case 0x000E: // according to original chip8 (wikipedia)
+		case 0x000E:
 			regX := second
 			regX >>= 8
 			regY := third
 			regY >>= 4
 
-			msb := cpu.Registers[regY] & 0b1000
+			msb := (cpu.Registers[regY] & 0b10000000) >> 7
 			cpu.Registers[regX] = (cpu.Registers[regY] << 1)
 			cpu.Registers[0xF] = msb
 		}
