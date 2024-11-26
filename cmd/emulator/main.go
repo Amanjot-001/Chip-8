@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	gamePath := "./games/IBM-Logo.ch8"
+	gamePath := "./tests/5-quirks.ch8"
 
 	chip8, err := cpu.NewCPU(gamePath)
 	if err != nil {
@@ -44,32 +44,24 @@ func main() {
 	quit := false
 	stepMode := false
 
-	// for certain number of cycles to run
-	// counter := 0
-
 	for !quit {
 		startTime := time.Now()
-		log.Println("start time", startTime)
+		// log.Println("start time", startTime)
 
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+			// log.Printf("Event captured: %T\n", event)
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				quit = true
 				log.Printf("quit")
 			case *sdl.KeyboardEvent:
+				log.Printf("Key event received: %+v\n", e)
 				chip8.Keys.HandleKeyPress(e)
-				log.Printf("keypress")
 			}
 		}
 
-		executionLoopStart := time.Now()
-		// if counter >= 0 {
+		// executionLoopStart := time.Now()
 		for i := 0; i < numFrame; i++ {
-			// if counter > 20 {
-			// 	break
-			// }
-			// counter++
-			instStart := time.Now()
 			if stepMode {
 				debugger.WaitForKeyPress(&quit)
 			}
@@ -77,33 +69,33 @@ func main() {
 			opcode := chip8.GetNextOpcode()
 			chip8.DecodeAndExecute(opcode)
 
+			// instStart := time.Now()
 			if chip8.DrawFlag {
 				chip8.Display.Render()
 				chip8.DrawFlag = false // Reset after rendering
 			}
-			log.Printf("Executing Opcode: 0x%X\n", opcode)
+			// log.Println("instruction since", time.Since(instStart))
+
+			// log.Printf("Executing Opcode: 0x%X\n", opcode)
 
 			if stepMode {
 				log.Printf("Executing Opcode: 0x%X\n", opcode)
 				// debugger.PrintState()
 			}
 
-			log.Println("instruction since", time.Since(instStart))
 		}
-		// }
-		log.Println("loop since", time.Since(executionLoopStart))
+		// log.Println("loop since", time.Since(executionLoopStart))
 
 		chip8.DecreaseTimers()
 
 		elapsed := time.Since(startTime)
-		log.Println("elapsed since", elapsed)
+		// log.Println("elapsed since", elapsed)
 
 		if elapsed < interval {
-			delaystarttime := time.Now()
-			log.Println("delaystarttime", delaystarttime)
-			// sdl.Delay(uint32(interval - elapsed))
+			// delaystarttime := time.Now()
+			// log.Println("delaystarttime", delaystarttime)
 			time.Sleep(interval - elapsed)
-			log.Println("delay since", time.Since(delaystarttime))
+			// log.Println("delay since", time.Since(delaystarttime))
 		}
 
 		// log.Printf("Frame elapsed: %v, Target interval: %v\n", elapsed, interval)

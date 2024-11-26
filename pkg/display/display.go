@@ -1,8 +1,6 @@
 package display
 
 import (
-	"log"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -49,10 +47,10 @@ func (d *Display) Clear() {
 func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	collision := false
 	updated := false
-	log.Println("len of sprite", len(sprite))
+	// log.Println("len of sprite", len(sprite))
 	for row := 0; row < len(sprite); row++ {
 		spriteRow := sprite[row]
-		log.Printf("sprite row %b\n", spriteRow)
+		// log.Printf("sprite row %b\n", spriteRow)
 		if spriteRow == 0 { // No pixels to draw in this row
 			continue
 		}
