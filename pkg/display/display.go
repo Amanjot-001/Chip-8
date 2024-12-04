@@ -1,6 +1,8 @@
 package display
 
 import (
+	"fmt"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -76,18 +78,18 @@ func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	return collision, updated
 }
 
-// func (d *Display) Render() {
-// 	for y := 0; y < Height; y++ {
-// 		for x := 0; x < Width; x++ {
-// 			if d.Pixels[y][x] == 1 {
-// 				fmt.Print("#") // Represents "on" pixel
-// 			} else {
-// 				fmt.Print(" ") // Represents "off" pixel
-// 			}
-// 		}
-// 		fmt.Println("")
-// 	}
-// }
+func (d *Display) Render2() {
+	for y := 0; y < Height; y++ {
+		for x := 0; x < Width; x++ {
+			if d.Pixels[y][x] == 1 {
+				fmt.Print("#") // Represents "on" pixel
+			} else {
+				fmt.Print(" ") // Represents "off" pixel
+			}
+		}
+		fmt.Println("")
+	}
+}
 
 func (d *Display) Render() {
 	d.renderer.SetDrawColor(0, 0, 0, 255) // Set draw color to black (clears the screen)
