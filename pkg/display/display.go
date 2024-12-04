@@ -49,14 +49,31 @@ func (d *Display) Clear() {
 func (d *Display) DrawSprite(x, y uint8, sprite []uint8) (bool, bool) {
 	collision := false
 	updated := false
+
+	x = x % Width
+	y = y % Height
+
 	// log.Println("len of sprite", len(sprite))
+
 	for row := 0; row < len(sprite); row++ {
 		spriteRow := sprite[row]
 		// log.Printf("sprite row %b\n", spriteRow)
+
 		if spriteRow == 0 { // No pixels to draw in this row
 			continue
 		}
+
+		// Skip entire row if it's outside the screen
+		if int(y)+row >= Height {
+			continue
+		}
+
 		for col := 0; col < 8; col++ {
+			// Skip pixel if it's outside the screen
+			if int(x)+col >= Width {
+				continue
+			}
+
 			pixelX := (x + uint8(col)) % Width
 			pixelY := (y + uint8(row)) % Height
 
