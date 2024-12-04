@@ -53,9 +53,9 @@ func main() {
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				quit = true
-				log.Printf("quit")
+				// log.Printf("quit")
 			case *sdl.KeyboardEvent:
-				log.Printf("Key event received: %+v\n", e)
+				// log.Printf("Key event received: %+v\n", e)
 				chip8.Keys.HandleKeyPress(e)
 			}
 		}
@@ -73,6 +73,7 @@ func main() {
 			if chip8.DrawFlag {
 				chip8.Display.Render()
 				chip8.DrawFlag = false // Reset after rendering
+				break                  // original chip-8 behaviour
 			}
 			// log.Println("instruction since", time.Since(instStart))
 
