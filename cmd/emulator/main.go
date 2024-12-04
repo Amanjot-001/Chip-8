@@ -3,16 +3,18 @@ package main
 import (
 	"chip-8/pkg/cpu"
 	"chip-8/pkg/debugger"
+	"chip-8/pkg/timers"
 	"context"
 	"log"
 
 	"time"
 
+	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 func main() {
-	gamePath := "./tests/6-keypad.ch8"
+	gamePath := "./tests/7-beep.ch8"
 
 	chip8, err := cpu.NewCPU(gamePath)
 	if err != nil {
@@ -24,9 +26,26 @@ func main() {
 	}
 	defer sdl.Quit()
 
+	if err := mix.Init(mix.INIT_MP3 | mix.INIT_OGG); err != nil {
+		log.Fatalf("Failed to initialize SDL_mixer: %v\n", err)
+	}
+	defer mix.Quit()
+
+	if err := mix.OpenAudio(22050, mix.DEFAULT_FORMAT, 2, 1024); err != nil {
+		log.Fatalf("Failed to open audio: %v\n", err)
+	}
+	defer mix.CloseAudio()
+
+	// Load the beep sound
+	beepSound, err := mix.LoadWAV("./assets/beep.wav")
+	if err != nil {
+		log.Fatalf("Failed to load beep sound: %v\n", err)
+	}
+	defer beepSound.Free()
+
 	// Context to manage timer goroutine lifecycle
 	ctx, cancel := context.WithCancel(context.Background())
-	go chip8.StartTimers(ctx)
+	go timers.StartTimers(ctx, beepSound, chip8)
 	defer cancel()
 
 	/* _________________ debugger init _________________ */
