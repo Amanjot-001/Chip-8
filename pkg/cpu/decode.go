@@ -194,16 +194,15 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		xval := cpu.Registers[regX]
 		yval := cpu.Registers[regY]
 
-		cpu.Registers[0xF] = 0
-
 		sprite := make([]uint8, height)
 		for row := 0; row < int(height); row++ {
 			sprite[row] = cpu.Memory.Read(cpu.I + uint16(row))
 		}
 
 		collision, updated := cpu.Display.DrawSprite(xval, yval, sprite)
+		cpu.Registers[0xF] = 0x00
 		if collision {
-			cpu.Registers[0xF] = 1
+			cpu.Registers[0xF] = 0x01
 		}
 		cpu.DrawFlag = updated
 	case 0xE000:
@@ -211,7 +210,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		case 0x009E:
 			regX := second
 			regX >>= 8
-			key := cpu.Registers[regX]
+			key := cpu.Registers[regX] & 0x0F
 
 			if cpu.Keys.IsKeyPressed(key) {
 				cpu.PC += 2
@@ -219,7 +218,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 		case 0x00A1:
 			regX := second
 			regX >>= 8
-			key := cpu.Registers[regX]
+			key := cpu.Registers[regX] & 0x0F
 
 			if !cpu.Keys.IsKeyPressed(key) {
 				cpu.PC += 2
