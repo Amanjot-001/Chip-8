@@ -4,10 +4,8 @@ import (
 	"chip-8/pkg/display"
 	"chip-8/pkg/input"
 	"chip-8/pkg/memory"
-	"context"
 	"fmt"
 	"log"
-	"time"
 )
 
 type CPU struct {
@@ -79,36 +77,4 @@ func (cpu *CPU) PopFromStack() uint16 {
 
 	cpu.SP--
 	return cpu.Stack[cpu.SP]
-}
-
-// func (cpu *CPU) DecreaseTimers() {
-// 	if cpu.DelayTimer > 0 {
-// 		cpu.DelayTimer--
-// 	}
-
-// 	if cpu.SoundTimer > 0 {
-// 		cpu.SoundTimer--
-// 	}
-// }
-
-// StartTimers runs a goroutine to decrement DelayTimer and SoundTimer at 60 Hz.
-func (cpu *CPU) StartTimers(ctx context.Context) {
-	ticker := time.NewTicker(time.Second / 60) // 60 Hz
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-ctx.Done():
-			return // Exit the goroutine when context is canceled
-		case <-ticker.C:
-			if cpu.DelayTimer > 0 {
-				cpu.DelayTimer--
-			}
-			if cpu.SoundTimer > 0 {
-				cpu.SoundTimer--
-				// Optional: Add sound handling logic here if your emulator supports sound
-				// Example: Beep or play sound if the sound timer reaches zero
-			}
-		}
-	}
 }
