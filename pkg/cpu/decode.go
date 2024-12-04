@@ -235,20 +235,24 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			regX := second
 			regX >>= 8
 			keyPressed := false
+			var pressedKey uint8
 
 			for !keyPressed {
 				event := sdl.WaitEvent()
 				switch e := event.(type) {
 				case *sdl.QuitEvent:
-					// quit := true
 					return
 				case *sdl.KeyboardEvent:
-					if e.State == sdl.PRESSED {
-						key := input.KeyMap[e.Keysym.Sym]
-						if key != 0 {
-							cpu.Registers[regX] = uint8(key)
-							keyPressed = true
-						}
+					key := input.KeyMap[e.Keysym.Sym]
+
+					if e.State == sdl.PRESSED && key != 0 {
+						pressedKey = uint8(key)
+					}
+
+					if e.State == sdl.RELEASED && key != 0 && uint8(key) == pressedKey {
+						keyPressed = true
+						cpu.Registers[regX] = pressedKey
+						return
 					}
 				}
 			}
