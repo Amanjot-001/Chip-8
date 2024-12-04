@@ -3,6 +3,7 @@ package main
 import (
 	"chip-8/pkg/cpu"
 	"chip-8/pkg/debugger"
+	"context"
 	"log"
 
 	"time"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	gamePath := "./tests/5-quirks.ch8"
+	gamePath := "./tests/6-keypad.ch8"
 
 	chip8, err := cpu.NewCPU(gamePath)
 	if err != nil {
@@ -22,6 +23,11 @@ func main() {
 		log.Fatalf("Failed to initialize SDL: %v\n", err)
 	}
 	defer sdl.Quit()
+
+	// Context to manage timer goroutine lifecycle
+	ctx, cancel := context.WithCancel(context.Background())
+	go chip8.StartTimers(ctx)
+	defer cancel()
 
 	/* _________________ debugger init _________________ */
 	debugger := debugger.NewDebugger(chip8)
@@ -86,8 +92,6 @@ func main() {
 
 		}
 		// log.Println("loop since", time.Since(executionLoopStart))
-
-		chip8.DecreaseTimers()
 
 		elapsed := time.Since(startTime)
 		// log.Println("elapsed since", elapsed)
