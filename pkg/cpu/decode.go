@@ -279,7 +279,7 @@ func (cpu *CPU) DecodeAndExecute(opcode uint16) {
 			// so we use char in last nibble
 			character := cpu.Registers[regX] & 0x0F
 
-			cpu.I = uint16(0x50 + character)
+			cpu.I = uint16(0x50 + (character * 5))
 		case 0x0033: // Binary-coded
 			regX := second
 			regX >>= 8

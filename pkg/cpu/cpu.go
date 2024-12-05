@@ -11,7 +11,7 @@ import (
 type CPU struct {
 	Memory     *memory.Memory   // 4096 bytes of memory
 	Registers  [16]uint8        // 16 8-bit registers
-	I          uint16           // addr register
+	I          uint16           // 12 bit addr register
 	PC         uint16           // program counter
 	Stack      [16]uint16       // chip8 hax max 16 levels depth for stack
 	SP         uint8            // stack pointer
